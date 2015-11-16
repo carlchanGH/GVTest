@@ -226,10 +226,13 @@ public class Directions extends AppCompatActivity implements
             // Check if arrived at destination
             if (route.arrivedAtDestination()) {
                 // Stop giving directions
+                if (googleApiClient.isConnected() && requestingLocationUpdates) {
+                    stopLocationUpdates();
+                }
+                sensorManager.unregisterListener(this);
                 Toast toast = Toast.makeText(context, Values.ARRIVE_AT_DESTINATION, Toast.LENGTH_SHORT);
                 toast.show();
                 finished = true;
-                onPause();
                 return;
             }
         }
@@ -355,7 +358,7 @@ public class Directions extends AppCompatActivity implements
             if (success) {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
-                // orientation contains: azimut, pitch and roll
+                // orientation contains: azimuth, pitch and roll
                 if (orientation[0] < 0) {
                     azimuth = 2 * (float)Math.PI + orientation[0];
                 } else {

@@ -49,6 +49,10 @@ public class Directions extends AppCompatActivity implements
     private float azimuth; // may need sync
     private TextView textView0, textView1, textView2, textView3, textView4;
 
+    // Todo: read these from settings (optionally enforce range)
+    private int INTERVAL = 5000;
+    private int LOCATION_BUFFER = 20; // meters
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +85,8 @@ public class Directions extends AppCompatActivity implements
 
         // Set up Location Request to periodically update currentLocation
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(4000);
+        locationRequest.setInterval(INTERVAL + 500);
+        locationRequest.setFastestInterval(INTERVAL - 500);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         // Manage text views
@@ -218,8 +222,8 @@ public class Directions extends AppCompatActivity implements
         Location targetLocation = route.getTargetLocation();
 
         // Check if reached target location
-        textView1.setText(Float.toString(newLocation.distanceTo(targetLocation)));
-        if (newLocation.distanceTo(targetLocation) < Values.LOCATION_BUFFER) {
+        textView1.setText("Distance: " + Float.toString(newLocation.distanceTo(targetLocation)));
+        if (newLocation.distanceTo(targetLocation) < LOCATION_BUFFER) {
             route.incrementTargetLocation();
             targetLocation = route.getTargetLocation();
             textView0.setText(route.getTargetStep().htmlInstructions);
@@ -248,9 +252,9 @@ public class Directions extends AppCompatActivity implements
             direction += 2 * (float)Math.PI;
         }
         // Todo: Improve accuracy - azimuth measurement, and true vs. magnetic north
-        textView3.setText(Float.toString(bearing));
-        textView4.setText(Float.toString(direction));
-        vibrate();
+        textView3.setText("Bearing: " + Float.toString(bearing));
+        textView4.setText("Direction: " + Float.toString(direction));
+        vibrate(200);
 
         // Todo: Make new API request if necessary
 //        try {
@@ -364,7 +368,7 @@ public class Directions extends AppCompatActivity implements
                 } else {
                     azimuth = orientation[0];
                 }
-                textView2.setText(Float.toString(azimuth));
+                textView2.setText("Azimuth: " + Float.toString(azimuth));
             }
         }
     }
@@ -374,8 +378,10 @@ public class Directions extends AppCompatActivity implements
 
     }
 
-    public void vibrate() {
+    public void vibrate(int duration) {
+        if (duration > 1000) duration = 1000;
+        if (duration < 100) duration = 100;
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(800);
+        v.vibrate(duration);
     }
 }

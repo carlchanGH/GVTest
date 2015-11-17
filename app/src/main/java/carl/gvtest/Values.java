@@ -5,7 +5,6 @@ package carl.gvtest;
  */
 public class Values {
     static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 1;
-    static final int LOCATION_BUFFER = 20; // meters
     static final String UNKNOWN_ERROR = "ERROR: Unknown error.";
     static final String LOCATION_ERROR = "ERROR: Cannot determine your location.";
     static final String DESTINATION_ERROR = "ERROR: Invalid destination.";

@@ -120,7 +120,7 @@ public class Directions extends AppCompatActivity implements
         long distanceValue;
         String distanceText;
 
-        Step (JSONObject step) throws JSONException {
+        Step (JSONObject step) throws JSONException { // Todo: determine what data we need
             htmlInstructions = step.getString("html_instructions");
             JSONObject object;
             object = step.getJSONObject("start_location");
@@ -154,7 +154,7 @@ public class Directions extends AppCompatActivity implements
         int numSteps;
         int currentStep;
 
-        Route (JSONObject response) throws JSONException {
+        Route (JSONObject response) throws JSONException { // Todo: determine what data we need
             JSONArray routes;
             JSONObject route;
             routes = response.getJSONArray("routes");
